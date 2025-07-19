@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mafia: Rise to Power</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: url('https://cdna.artstation.com/p/assets/images/images/032/931/560/large/-5.jpg?1607918875') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .gangs {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .gang {
+      background: rgba(0,0,0,0.7);
+      border-radius: 15px;
+      padding: 20px;
+      width: 400px;
+      box-shadow: 0 0 20px red;
+      text-align: center;
+      transition: transform 0.3s;
+      margin: 10px;
+    }
+    .gang:hover {
+      transform: scale(1.05);
+    }
+    .gang img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 10px 0;
+    }
+    .members {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .members img {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      margin: 0 5px;
+    }
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .actions button {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 15px;
+      font-size: 18px;
+      cursor: pointer;
+      background: linear-gradient(90deg, #ff4e50, #f9d423);
+      color: black;
+      font-weight: bold;
+      box-shadow: 0px 0px 10px red;
+      transition: 0.3s;
+      margin: 10px 0;
+    }
+    .actions button:hover {
+      transform: scale(1.1);
+      box-shadow: 0px 0px 20px yellow;
+    }
+    .conditions-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .condition-box {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      padding: 25px;
+      width: 300px;
+      font-family: 'Orbitron', sans-serif;
+      text-align: left;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    .win-box {
+      border: 2px solid #00ff88;
+      box-shadow: 0 0 15px #00ff88;
+      color: #00ff88;
+    }
+    .loss-box {
+      border: 2px solid #ff4444;
+      box-shadow: 0 0 15px #ff4444;
+      color: #ff4444;
+    }
+    .condition-box h3 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      font-family: sans-serif;
+    }
+    .condition-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .condition-box li {
+      margin: 8px 0;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+    }
+    .condition-box li::before {
+      content: '•';
+      color: currentColor;
+      margin-right: 10px;
+    }
+    .police-box {
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #00aaff;
+      box-shadow: 0 0 15px #00aaff;
+      border-radius: 15px;
+      padding: 15px;
+      width: 400px;
+      text-align: center;
+      margin: 20px;
+      color: #ffffff;
+      font-family: 'Orbitron', sans-serif;
+       display: flex;
+  flex-direction: column;
+  justify-content: center;
+    }
+    #game-log {
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 15px;
+      padding: 15px;
+      width: 80%;
+      max-width: 1000px;
+      height: 150px;
+      overflow-y: auto;
+      text-align: left;
+      color: #00ff88;
+      font-family: monospace;
+      border: 2px solid #333;
+    }
+    .log-entry {
+      margin: 5px 0;
+      padding: 5px;
+      border-bottom: 1px solid #333;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+    }
+    .modal-content {
+      background-color: rgba(20, 20, 20, 0.9);
+      margin: 15% auto;
+      padding: 20px;
+      border: 2px solid #f00;
+      border-radius: 15px;
+      width: 300px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 0 20px red;
+      font-family: sans-serif;
+    }
+    .modal-content input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #f00;
+      background-color: #333;
+      color: white;
+    }
+    .modal-content button {
+      padding: 10px 20px;
+      margin: 10px 5px;
+      border: none;
+      border-radius: 5px;
+      background: linear-gradient(90deg, #ff4e50, #f9d423);
+      color: black;
+      cursor: pointer;
+    }
+    #game-over-modal .modal-content {
+      width: 400px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1 style="font-size: 50px; text-shadow: 0px 0px 10px red;">Mafia: Rise to Power</h1>
+  
+  <div class="conditions-container">
+    <div class="condition-box win-box">
+      <h3>✅ Win Conditions</h3>
+      <ul>
+        <li>🏴 Occupy 10 Territories</li>
+        <li>💀 Eliminate Opponent Gang (< 3 members)</li>
+        <li>💪 Strength >= 100</li>
+      </ul>
+    </div>
+  
+    <div class="condition-box loss-box">
+      <h3>❌ Loss Conditions</h3>
+      <ul>
+        <li>💸 Assets < ($10000)</li>
+        <li>🚔 Police Raid (100% suspicion)</li>
+        <li>🪓 Gang Loyalty(< 20%)</li>
+        <li>👥 Gang Members < 3</li>
+        <li>⚔️ Opponent Strenght > 120</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="gangs">
+    <div class="gang" id="player-gang">
+      <h2>The Shadows</h2>
+      <h2>Your Gang</h2>
+      <img src="https://imgcdn.stablediffusionweb.com/2024/5/6/e61fd33d-3a1e-434e-98ef-fe0a06ae1ad7.jpg" alt="Shadows Boss">
+      <p>💵 Money: $<span id="player-money">500000</span></p>
+      <p>👥 Members: <span id="player-members">25</span></p>
+      <p>📍 Territories: <span id="player-territories">3</span></p>
+      <p>💪 Strength: <span id="player-strength">75</span></p>
+      <p>🤝 Loyalty: <span id="player-loyalty">90</span>%</p>
+    </div>
+
+    <div class="police-box" id="police-info">
+      <h2>🚔 Eagle Watch Police</h2>
+      <p>Suspicion Level: <span id="police-suspicion">40</span>%</p>
+      <p>Total Bribes: $<span id="police-bribes">0</span></p>
+      <p id="raid-status">🕵️‍♂️ Surveillance Active</p>
+    </div>
+
+    <div class="gang" id="opponent-gang">
+      <h2>The Snakes</h2>
+      <h2>Opponent</h2>
+      <img src="https://play-lh.googleusercontent.com/Ts5yJp0ho4g7xzDap6nSBdnBp0WoPjO5NCdcOD4Pv8nlNy4tQS4HT-II-h0ylqExaOcE=w240-h480-rw" alt="Snakes Boss">
+      <p>💀 Power: <span id="opponent-power">70</span></p>
+      <p>👥 Members: <span id="opponent-members">30</span></p>
+      <p>📍 Territories: <span id="opponent-territories">5</span></p>
+      <p>⚔️ Aggression: <span id="opponent-aggression">HIGH</span></p>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="attack-btn">🔥 Attack Opponent</button>
+    <button id="bribe-btn">💰 Bribe Police</button>
+    <button id="increase-gang-btn">💪 Increase Gang</button>
+    <button id="exit-btn">🚪 Exit Game</button>
+  </div>
+
+  <div id="game-log">
+    <div class="log-entry">Welcome to Mafia: Rise to Power! Your journey begins...</div>
+  </div>
+</div>
+
+<!-- Bribe Modal -->
+<div id="bribe-modal" class="modal">
+  <div class="modal-content">
+    <h3>Bribe Police</h3>
+    <p>Current suspicion: <span id="modal-suspicion">40</span>%</p>
+    <p>Your money: $<span id="modal-money">500000</span></p>
+       <p>Enter Bribe amount</p>
+    <input type="number" id="bribe-amount" placeholder="Enter bribe amount">
+    <button id="confirm-bribe">Confirm</button>
+    <button id="cancel-bribe">Cancel</button>
+  </div>
+</div>
+
+<!-- Increase Gang Modal -->
+<div id="increase-modal" class="modal">
+  <div class="modal-content">
+    <h3>Increase Gang</h3>
+    <p>Each member costs: $50,000</p>
+    <p>Your money: $<span id="modal-gang-money">500000</span></p>
+       <p>Enter the number of members</p>
+    <input type="number" id="members-to-add" placeholder="Number of members">
+    <button id="confirm-increase">Confirm</button>
+    <button id="cancel-increase">Cancel</button>
+  </div>
+</div>
+
+<!-- Game Over Modal -->
+<div id="game-over-modal" class="modal">
+  <div class="modal-content">
+    <h2 id="game-over-title">Game Over</h2>
+    <p id="game-over-message">You have lost the game!</p>
+    <button id="restart-game">Restart Game</button>
+  </div>
+</div>
+
+<script>
+// Game state
+const gameState = {
+  player: {
+    name: "The Shadows",
+    money: 500000,
+    members: 25,
+    territories: 3,
+    strength: 75,
+    loyalty: 90
+  },
+  opponent: {
+    name: "The Snakes",
+    power: 0,
+    members: 30,
+    territories: 0,
+    aggression: ""
+  },
+  police: {
+    name: "Eagle Watch",
+    suspicion: 40,
+    bribes: 0,
+    raid: false
+  }
+};
+
+// Initialize opponent values
+function initOpponent() {
+  // Generate random power between 50-100
+  gameState.opponent.power = Math.floor(Math.random() * 51) + 50;
+  
+  // Set territories and aggression based on power
+  if (gameState.opponent.power >= 90) {
+    gameState.opponent.territories = 8;
+    gameState.opponent.aggression = "EXTREME";
+  } else if (gameState.opponent.power >= 80) {
+    gameState.opponent.territories = 6;
+    gameState.opponent.aggression = "VERY HIGH";
+  } else if (gameState.opponent.power >= 70) {
+    gameState.opponent.territories = 5;
+    gameState.opponent.aggression = "HIGH";
+  } else if (gameState.opponent.power >= 60) {
+    gameState.opponent.territories = 3;
+    gameState.opponent.aggression = "MODERATE";
+  } else {
+    gameState.opponent.territories = 1;
+    gameState.opponent.aggression = "LOW";
+  }
+  
+  updateDisplay();
+}
+
+// Function to update the display
+function updateDisplay() {
+  // Update player stats
+  document.getElementById("player-money").textContent = gameState.player.money;
+  document.getElementById("player-members").textContent = gameState.player.members;
+  document.getElementById("player-territories").textContent = gameState.player.territories;
+  document.getElementById("player-strength").textContent = gameState.player.strength;
+  document.getElementById("player-loyalty").textContent = gameState.player.loyalty;
+  
+  // Update opponent stats
+  document.getElementById("opponent-power").textContent = gameState.opponent.power;
+  document.getElementById("opponent-members").textContent = gameState.opponent.members;
+  document.getElementById("opponent-territories").textContent = gameState.opponent.territories;
+  document.getElementById("opponent-aggression").textContent = gameState.opponent.aggression;
+  
+  // Update police stats
+  document.getElementById("police-suspicion").textContent = gameState.police.suspicion;
+  document.getElementById("police-bribes").textContent = gameState.police.bribes;
+  document.getElementById("modal-suspicion").textContent = gameState.police.suspicion;
+  document.getElementById("modal-money").textContent = gameState.player.money;
+  document.getElementById("modal-gang-money").textContent = gameState.player.money;
+  
+  // Update raid status if suspicion is high
+  if (gameState.police.suspicion >= 80) {
+    document.getElementById("raid-status").textContent = "🚨 HIGH ALERT! RAID IMMINENT";
+    document.getElementById("raid-status").style.color = "#ff4444";
+  } else if (gameState.police.suspicion >= 60) {
+    document.getElementById("raid-status").textContent = "⚠️ INCREASED SURVEILLANCE";
+    document.getElementById("raid-status").style.color = "orange";
+  } else {
+    document.getElementById("raid-status").textContent = "🕵️‍♂️ Surveillance Active";
+    document.getElementById("raid-status").style.color = "white";
+  }
+}
+
+// Add log entry
+function addLog(message) {
+  const logContainer = document.getElementById("game-log");
+  const entry = document.createElement("div");
+  entry.className = "log-entry";
+  entry.textContent = message;
+  logContainer.appendChild(entry);
+  logContainer.scrollTop = logContainer.scrollHeight;
+}
+
+// Check game over conditions
+function checkGameOver() {
+  let gameOver = false;
+  let message = "";
+  let isWin = false;
+  
+  // Win conditions
+  if (gameState.player.territories >= 10) 
+  {
+    gameOver = true;
+    message = "You've conquered all territories! The city is yours!";
+    isWin = true;
+  } else if (gameState.opponent.members <= 2) 
+  {
+    gameOver = true;
+    message = "You've eliminated the enemy gang! The Snakes are no more!";
+    isWin = true;
+  }
+  else if(gameState.player.strength >=100)
+  {
+    gameOver = true;
+    message = "Congratulations!! You Stranghten Your gang";
+    isWin = true;
+  }
+  
+  // Loss conditions
+  if (gameState.player.money <= 10000)
+  {
+    gameOver = true;
+    message = "You've run out of money! Your empire crumbles...";
+  }
+  else if (gameState.police.suspicion >= 100) 
+  {
+    gameOver = true;
+    message = "Police raid! Your operation has been busted!";
+  }
+   else if (gameState.player.loyalty < 30) 
+  {
+    gameOver = true;
+    message = "Your gang's loyalty has fallen too low! Members have joined the enemy!";
+  }
+   else if (gameState.player.members <= 5)
+  {
+    gameOver = true;
+    message = "You've lost too many members! Your gang is decimated!";
+  }
+  else if(gameState.opponent.power>=120)
+  {
+    gameOver = true;
+    message = "Enemies got the extrem power!. OPPONENT Attacked!!";
+  }
+  
+  // Show game over modal if game is over
+  if (gameOver) {
+    document.getElementById("game-over-title").textContent = isWin ? "Victory!" : "Game Over";
+    document.getElementById("game-over-message").textContent = message;
+    document.getElementById("game-over-modal").style.display = "block";
+    addLog(message);
+  }
+  
+  return gameOver;
+}
+
+// Attack opponent function
+function attackOpponent() {
+  if (checkGameOver()) return;
+  
+  if (gameState.player.strength < gameState.opponent.power) {
+    // Player loses the attack
+    addLog("⚔️ Attack failed! The enemy was stronger!");
+    addLog("🔫 The Snakes counter-attacked!");
+
+    gameState.opponent.power +=10;
+    addLog("Opponent strenght Increased to "+ gameState.opponent.power + "%");
+    
+    gameState.police.suspicion += 10;
+    addLog("🚔 Police suspicion increased to " + gameState.police.suspicion + "%");
+    
+    gameState.player.loyalty -= 5;
+    addLog("👥 Gang loyalty decreased to " + gameState.player.loyalty + "%");
+    
+    gameState.player.money -= 20000;
+    addLog("💰 Lost $20,000 in damages");
+    
+    gameState.player.members -= 2;
+    addLog("⚰️ Lost 2 gang members in the fight");
+  } 
+  else {
+    // Player wins the attack
+    addLog("⚔️ Attack successful! You've weakened The Snakes!");
+    
+    gameState.player.strength += 10;
+    addLog("💪 Gang strength increased to " + gameState.player.strength);
+    
+    gameState.player.territories += 2;
+    addLog("🏴 Gained 2 territory! Total: " + gameState.player.territories);
+    
+    gameState.player.money += 25000;
+    addLog("💰 Gained $25,000 from new territory");
+    
+    gameState.opponent.members -= 2;
+    addLog("☠️ Eliminated 2 enemy gang members");
+    
+    gameState.opponent.power -= 5;
+    addLog("⚡ Enemy power decreased to " + gameState.opponent.power);
+  }
+  
+  updateDisplay();
+  checkGameOver();
+}
+
+// Bribe police function
+function bribePolice(amount) {
+  if (checkGameOver()) return;
+  
+  if (amount <= 0 || amount > gameState.player.money) {
+    addLog("❌ Invalid bribe amount!");
+    return;
+  }
+  
+  let accepted = false;
+  
+  // Determine if bribe is accepted based on suspicion level and amount
+  if (gameState.police.suspicion >= 90 && amount >= 100000) {
+    addLog("⚠️ HIGH ALERT! Police suspicion at " + gameState.police.suspicion + "%");
+    accepted = true;
+    gameState.police.bribes += amount;
+    gameState.police.suspicion -= 20;
+    addLog("💼 High-risk bribe of $" + amount + " accepted!");
+  } else if (gameState.police.suspicion >= 80 && amount >= 95000) {
+    accepted = true;
+    gameState.police.bribes += amount;
+    gameState.police.suspicion -= 10;
+    addLog("💼 Bribe of $" + amount + " accepted!");
+  } else if (gameState.police.suspicion >= 70 && amount >= 90000) {
+    accepted = true;
+    gameState.police.bribes += amount;
+    gameState.police.suspicion -= 10;
+    addLog("💼 Bribe of $" + amount + " accepted!");
+  } else if (gameState.police.suspicion >= 60 && amount >= 78000) {
+    accepted = true;
+    gameState.police.bribes += amount;
+    gameState.police.suspicion -= 10;
+    addLog("💼 Bribe of $" + amount + " accepted!");
+  } else if (gameState.police.suspicion >= 50 && amount >= 60000) {
+    accepted = true;
+    gameState.police.bribes += amount;
+    gameState.police.suspicion -= 10;
+    addLog("💼 Bribe of $" + amount + " accepted!");
+  } else if (gameState.police.suspicion >= 40 && amount >= 50000) {
+    accepted = true;
+    gameState.police.bribes += amount;
+    gameState.police.suspicion -= 10;
+    addLog("💼 Bribe of $" + amount + " accepted!");
+  } else {
+    // Bribe rejected, suspicion increases
+    accepted = false;
+    gameState.police.suspicion += 20;
+    addLog("❌ Bribe rejected! Police suspicion increased to " + gameState.police.suspicion + "%");
+    addLog("⚠️ BE CAREFUL WITH YOUR NEXT MOVE!");
+  }
+  
+  // Deduct money regardless if accepted or not
+  gameState.player.money -= amount;
+  addLog("💸 Your assets: $" + gameState.player.money);
+  
+  updateDisplay();
+  checkGameOver();
+}
+
+// Increase gang function
+function increaseGang(members) {
+  if (checkGameOver()) return;
+  
+  if (members <= 0) {
+    addLog("❌ Invalid number of members!");
+    return;
+  }
+  
+  const cost = members * 50000;
+  
+  if (gameState.player.loyalty <= 40 && gameState.player.loyalty >= 20) {
+    addLog("⚠️ WARNING: Loyalty too low! Members may join the opponent!");
+  } else if (gameState.player.loyalty < 20) {
+    addLog("❌ LOYALTY FINISHED! Members joined the opponent!");
+    checkGameOver();
+    return;
+  }
+  
+  if (cost > gameState.player.money) {
+    addLog("❌ Not enough money to recruit " + members + " members!");
+    return;
+  }
+  
+  // Successful recruitment
+  gameState.player.members += parseInt(members);
+  gameState.player.money -= cost;
+  gameState.police.suspicion += 5;
+  gameState.player.loyalty -= 3;
+  gameState.player.strength +=5;
+  
+  addLog("👥 Recruited " + members + " new members!");
+  addLog("👥 Total gang members: " + gameState.player.members);
+  addLog("💸 Spent $" + cost + " on recruitment");
+  addLog("💰 Remaining assets: $" + gameState.player.money);
+  addLog("🚔 Police suspicion increased to " + gameState.police.suspicion + "%");
+  addLog("🤝 Gang loyalty decreased to " + gameState.player.loyalty + "%");
+  addLog("💪 Strenght Increased to" + gameState.player.strength);
+  
+  updateDisplay();
+  checkGameOver();
+}
+
+// Event Listeners
+document.addEventListener("DOMContentLoaded", function() {
+  // Initialize the game
+  initOpponent();
+  addLog("Game initialized! Make your first move...");
+  
+  // Attack button
+  document.getElementById("attack-btn").addEventListener("click", function() {
+    attackOpponent();
+  });
+  
+  // Bribe button and modal
+  document.getElementById("bribe-btn").addEventListener("click", function() {
+    document.getElementById("bribe-modal").style.display = "block";
+  });
+  
+  document.getElementById("confirm-bribe").addEventListener("click", function() {
+    const amount = parseInt(document.getElementById("bribe-amount").value);
+    document.getElementById("bribe-modal").style.display = "none";
+    bribePolice(amount);
+  });
+  
+  document.getElementById("cancel-bribe").addEventListener("click", function() {
+    document.getElementById("bribe-modal").style.display = "none";
+  });
+  
+  // Increase gang button and modal
+  document.getElementById("increase-gang-btn").addEventListener("click", function() {
+    document.getElementById("increase-modal").style.display = "block";
+  });
+  
+  document.getElementById("confirm-increase").addEventListener("click", function() {
+    const members = document.getElementById("members-to-add").value;
+    document.getElementById("increase-modal").style.display = "none";
+    increaseGang(members);
+  });
+  
+  document.getElementById("cancel-increase").addEventListener("click", function() {
+    document.getElementById("increase-modal").style.display = "none";
+  });
+  
+  // Exit button
+  document.getElementById("exit-btn").addEventListener("click", function() {
+    if (confirm("Are you sure you want to exit the game?")) {
+      addLog("Exiting game by player choice.");
+      document.getElementById("game-over-title").textContent = "Game Exited";
+      document.getElementById("game-over-message").textContent = "You have chosen to leave the criminal underworld.";
+      document.getElementById("game-over-modal").style.display = "block";
+    }
+  });
+  
+  // Restart game button
+  document.getElementById("restart-game").addEventListener("click", function() {
+    location.reload();
+  });
+  
+  // Close modal if clicked outside
+  window.onclick = function(event) {
+    if (event.target == document.getElementById("bribe-modal")) {
+      document.getElementById("bribe-modal").style.display = "none";
+    }
+    if (event.target == document.getElementById("increase-modal")) {
+      document.getElementById("increase-modal").style.display = "none";
+    }
+  };
+});
+</script>
+
+</body>
+</html>
