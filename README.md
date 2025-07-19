@@ -1,4 +1,7 @@
-This the Mafia Game base on the Html and cpp. Goal: Build a crime empire by controlling 10 territories or eliminating rival gang members (<3).
+This the Mafia Game based on the Html and cpp.
+Goal: 
+
+Build a crime empire by controlling 10 territories or eliminating rival gang members (<3).
 
 Resources: Manage money ($500K start), gang members (25), loyalty (90%), and police suspicion (40%).
 
