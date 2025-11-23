@@ -7,6 +7,7 @@ using namespace std;
 class Police 
 {
 protected:
+//C++ logic for the game
     int bribeMoney;
     int suspicionLevel;
     string troopName;
@@ -371,4 +372,5 @@ int main()
         m.gameover();
     }
     return 0;
+
 }
